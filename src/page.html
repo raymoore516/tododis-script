@@ -1,0 +1,89 @@
+<html>
+
+<head>
+    <title>TODODIS</title>
+    <link rel="stylesheet" href="style.css">
+    </link>
+    <script defer src="script.js"></script>
+</head>
+
+<body>
+    <div id="content">
+        <div class="section header">
+            <h1>TODODIS: Task Generator</h1>
+            <p>Integrates with Todoist REST APIs</p>
+        </div>
+        <div class="section form">
+            <h2>Onboarding Information</h2>
+            <label>
+                <span>Client Name</span>
+                <input class="client" placeholder="John Doe"></input>
+            </label>
+            <label>
+                <span>Pet Name(s)</span>
+                <input class="pets"></input>
+            </label>
+            <label>
+                <span>Email</span>
+                <input class="email" type="email"></input>
+            </label>
+            <label>
+                <span>Phone</span>
+                <input class="phone" type="phone"></input>
+            </label>
+            <button class="submit">Submit</button>
+        </div>
+        <div class="section settings">
+            <h2>API Settings</h2>
+            <label>
+                <span>API Key</span>
+                <input class="api-key" disabled value="***"></input>
+            </label>
+            <label>
+                <span>Project ID</span>
+                <input class="project-id" disabled value="***"></input>
+            </label>
+            <label>
+                <span>Section ID</span>
+                <input class="section-id" disabled value="***"></input>
+            </label>
+        </div>
+        <div class="section subtasks">
+            <h2>Subtask Configuration</h2>
+            <div class="subtask">
+                <h3 class="summary">1. Reply to Client</h3>
+                <p class="description">Direct to Meet &amp; Greet page if needed</p>
+            </div>
+            <div class="subtask">
+                <h3 class="summary">2. Confirm Meet &amp; Greet</h3>
+                <p class="description">Client to set up via self service</p>
+            </div>
+            <div class="subtask">
+                <h3 class="summary">3. Onboarding E-Mail</h3>
+                <p class="description">Include FAQs and other materials</p>
+            </div>
+            <div class="subtask">
+                <h3 class="summary">4. Add Client to TTP</h3>
+                <p class="description"></p>
+            </div>
+            <div class="subtask">
+                <h3 class="summary">5. Meet &amp; Greet</h3>
+                <p class="description"></p>
+            </div>
+            <div class="subtask">
+                <h3 class="summary">6. Onboarding Check-In</h3>
+                <p class="description">Follow up after 2 days if not complete</p>
+            </div>
+            <div class="subtask">
+                <h3 class="summary">7. Approve Schedule Request</h3>
+                <p class="description"></p>
+            </div>
+            <div class="subtask">
+                <h3 class="summary">8. Add to Mailchimp</h3>
+                <p class="description"></p>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

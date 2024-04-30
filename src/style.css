@@ -1,0 +1,48 @@
+#content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.section {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.section h1,h2,h3 {
+    margin: 0;
+}
+
+.form {
+    gap: 10px;
+}
+
+.section label {
+    display: flex;
+    flex-direction: column;
+    margin-left: 10px;
+}
+
+.form input {
+    padding: 5px;
+    font-size: 1.1em;
+}
+
+.form button {
+    margin-top: 10px;
+    padding: 10px;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.settings {
+    border-top: 1px solid gray;
+    padding-top: 10px;
+    gap: 5px;
+}
+
+.subtasks {
+    display: none;
+}

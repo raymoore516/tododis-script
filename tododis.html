@@ -1,0 +1,220 @@
+<html>
+
+<head>
+    <title>TODODIS</title>
+    <!-- CSS Styling -->
+    <style>
+        #content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .section {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .section :is(h1, h2, h3, h4, h5, h6) {
+            margin: 0;
+        }
+
+        .form {
+            gap: 10px;
+        }
+
+        .section label {
+            display: flex;
+            flex-direction: column;
+            margin-left: 10px;
+        }
+
+        .form input {
+            padding: 5px;
+            font-size: 1.1em;
+        }
+
+        .form button {
+            margin-top: 10px;
+            padding: 10px;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .settings {
+            border-top: 1px solid gray;
+            padding-top: 10px;
+            gap: 5px;
+        }
+
+        .subtasks {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="content">
+        <div class="section header">
+            <h1>TODODIS: Task Generator</h1>
+            <p>Integrates with Todoist REST APIs. Use "Right-Click > Inspect" to monitor API progress.</p>
+        </div>
+        <div class="section form">
+            <h2>Onboarding Information</h2>
+            <label>
+                <span>Client Name</span>
+                <input class="client" placeholder="John Doe"></input>
+            </label>
+            <label>
+                <span>Pet Name(s)</span>
+                <input class="pets"></input>
+            </label>
+            <label>
+                <span>Email</span>
+                <input class="email" type="email"></input>
+            </label>
+            <label>
+                <span>Phone</span>
+                <input class="phone" type="phone"></input>
+            </label>
+            <button class="submit">Submit</button>
+        </div>
+        <div class="section settings">
+            <h2>API Settings</h2>
+            <label>
+                <span>API Key</span>
+                <input class="api-key" disabled value="***"></input>
+            </label>
+            <label>
+                <span>Project ID</span>
+                <input class="project-id" disabled value="***"></input>
+            </label>
+            <label>
+                <span>Section ID</span>
+                <input class="section-id" disabled value="***"></input>
+            </label>
+        </div>
+        <div class="section subtasks">
+            <h2>Subtask Configuration</h2>
+            <div class="subtask">
+                <h3 class="summary">1. Reply to Client</h3>
+                <p class="description">Direct to Meet &amp; Greet page if needed</p>
+            </div>
+            <div class="subtask">
+                <h3 class="summary">2. Confirm Meet &amp; Greet</h3>
+                <p class="description">Client to set up via self service</p>
+            </div>
+            <div class="subtask">
+                <h3 class="summary">3. Onboarding E-Mail</h3>
+                <p class="description">Include FAQs and other materials</p>
+            </div>
+            <div class="subtask">
+                <h3 class="summary">4. Add Client to TTP</h3>
+                <p class="description"></p>
+            </div>
+            <div class="subtask">
+                <h3 class="summary">5. Meet &amp; Greet</h3>
+                <p class="description"></p>
+            </div>
+            <div class="subtask">
+                <h3 class="summary">6. Onboarding Check-In</h3>
+                <p class="description">Follow up after 2 days if not complete</p>
+            </div>
+            <div class="subtask">
+                <h3 class="summary">7. Approve Schedule Request</h3>
+                <p class="description"></p>
+            </div>
+            <div class="subtask">
+                <h3 class="summary">8. Add to Mailchimp</h3>
+                <p class="description"></p>
+            </div>
+        </div>
+    </div>
+    <script>
+        const button = document.querySelector('button.submit');
+        button.addEventListener('click', onSubmit);
+
+        function onSubmit() {
+            const parent = buildParent();
+
+            console.log("Submitting...");
+
+            submit(parent)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP response was unsuccessful. ${response.status} - ${response.statusText}`);
+                    }
+                    return response.json();
+                })
+                .then(async data => {
+                    console.log(`Parent Task: ${data.url}`);
+                    const subtasks = buildSubtasks(data.id);
+                    for (let i = 0; i < subtasks.length; i++) {
+                        const response = await submit(subtasks[i]);
+                        if (!response.ok) {
+                            throw new Error(`HTTP response was unsuccessful. ${response.status} - ${response.statusText}`);
+                        }
+                        const data = await response.json();
+                        console.log(` > Subtask #${i + 1}: ${data.url}`);
+                    }
+                    console.log("Complete!");
+                })
+                .catch(error => {
+                    console.error('Unexpected Error:', error);
+                });
+        }
+
+        function buildParent() {
+            const client = document.querySelector('.client')?.value;
+            if (client === undefined) {
+                alert("Client name is required");
+            }
+
+            const pets = document.querySelector('.pets')?.value;
+            const email = document.querySelector('.email')?.value;
+            const phone = document.querySelector('.phone')?.value;
+
+            const bean = {};
+            bean.content = `Onboarding: ${client}`
+            bean.description = `Pet(s): ${pets}\nEmail: ${email}\nPhone: ${phone}`
+            bean.project_id = document.querySelector('.project-id')?.value;
+            bean.section_id = document.querySelector('.section-id')?.value;
+
+            return bean;
+        }
+
+        function buildSubtasks(id) {
+            const subtasks = [];
+
+            document.querySelectorAll('.subtask').forEach(subtask => {
+                const bean = {};
+                bean.content = subtask.querySelector('.summary')?.innerText;
+                bean.description = subtask.querySelector('.description')?.innerText;
+                bean.parent_id = id;
+                subtasks.push(bean);
+            });
+
+            return subtasks;
+        }
+
+        async function submit(bean) {
+            const token = document.querySelector('.api-key')?.value;
+
+            const url = "https://api.todoist.com/rest/v2/tasks";
+            const options = {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(bean)
+            };
+
+            return fetch(url, options);
+        }
+    </script>
+</body>
+
+</html>
