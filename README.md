@@ -30,7 +30,7 @@ The HTML file has `***` placeholder values that need to be updated.
 </label>
 ```
 
-Your personal **API Key*** for Todoist may be found here:
+Your personal **API Key** for Todoist may be found here:
 https://app.todoist.com/app/settings/integrations/developer
 
 Your project and section IDs may be found by clicking "Copy project link" or "Copy link to section" in the Todoist application.
